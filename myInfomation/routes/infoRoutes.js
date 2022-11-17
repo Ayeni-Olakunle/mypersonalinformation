@@ -4,7 +4,7 @@ const { getInfo, postInfo, editInfo, deleteInfo } = require("../controllers/info
 const { protect } = require("../middleware/authMiddleware")
 
 router.get("/", protect, getInfo)
-router.post("/", postInfo)
+router.post("/", protect, postInfo)
 
 router.put("/:id", protect, editInfo)
 router.delete("/:id", protect, deleteInfo)

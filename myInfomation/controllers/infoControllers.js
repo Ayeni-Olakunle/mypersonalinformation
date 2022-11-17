@@ -1,9 +1,10 @@
 const asynHandler = require("express-async-handler")
 const info = require("../model/infoModel")
+const Users = require("../model/usersModel")
 
 
 const getInfo = asynHandler(async (req, res) => {
-    const infos = await info.find()
+    const infos = await info.find({ user: req.user.id })
     res.status(200).json(infos)
 })
 
@@ -16,6 +17,7 @@ const postInfo = asynHandler(async (req, res) => {
         linkName: req.body.linkName,
         link: req.body.link,
         description: req.body.description,
+        user: req.user.id
     })
     res.status(200).json(infos)
 })
@@ -25,6 +27,16 @@ const editInfo = asynHandler(async (req, res) => {
     if (!updateInfo) {
         res.status(400)
         throw new Error("Infomation not found")
+    }
+    const user = await Users.findById(req.user.id)
+
+    if (!user) {
+        res.status(401)
+        throw new Error("User not found")
+    }
+    if (updateInfo.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error("User not authorization ")
     }
     const updatedInfo = await info.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -37,6 +49,17 @@ const deleteInfo = asynHandler(async (req, res) => {
     if (!deleteInfo) {
         res.status(400)
         throw new Error("Infomation not found")
+    }
+
+    const user = await Users.findById(req.user.id)
+
+    if (!user) {
+        res.status(401)
+        throw new Error("User not found")
+    }
+    if (deleteInfo.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error("User not authorization ")
     }
 
     await deleteInfo.remove();
