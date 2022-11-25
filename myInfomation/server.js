@@ -12,7 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/info", require("./routes/infoRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 app.use(errorHandler)
 
 app.listen(port, () => {
