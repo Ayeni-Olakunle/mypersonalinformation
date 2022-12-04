@@ -63,13 +63,7 @@ const loginUser = asynHandler(async (req, res) => {
 })
 
 const currentUser = asynHandler(async (req, res) => {
-    const { _id, name, email, phoneNumber } = await User.findById(req.user.id)
-    res.status(200).json({
-        id: _id,
-        name,
-        email,
-        phoneNumber
-    })
+    res.status(200).json(req.user)
 })
 
 module.exports = {

@@ -28,13 +28,12 @@ const editInfo = asynHandler(async (req, res) => {
         res.status(400)
         throw new Error("Infomation not found")
     }
-    const user = await Users.findById(req.user.id)
 
-    if (!user) {
+    if (!req.user) {
         res.status(401)
         throw new Error("User not found")
     }
-    if (updateInfo.user.toString() !== user.id) {
+    if (updateInfo.user.toString() !== req.user.id) {
         res.status(401)
         throw new Error("User not authorization ")
     }
@@ -51,13 +50,11 @@ const deleteInfo = asynHandler(async (req, res) => {
         throw new Error("Infomation not found")
     }
 
-    const user = await Users.findById(req.user.id)
-
-    if (!user) {
+    if (!req.user) {
         res.status(401)
         throw new Error("User not found")
     }
-    if (deleteInfo.user.toString() !== user.id) {
+    if (deleteInfo.user.toString() !== req.user.id) {
         res.status(401)
         throw new Error("User not authorization ")
     }
